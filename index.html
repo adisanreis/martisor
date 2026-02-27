@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Martisor 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=VT323&family=Nunito:wght@700;800&display=swap');
+
+  :root {
+    --red:#c8102e; --red-dark:#8b0a1e; --red-light:#e84060;
+    --red-pale:#ffd6dc; --gold:#c89a10; --gold-light:#f5c842;
+    --gold-glow:#ffe066; --text:#2a0008; --text-light:#7a2030; --text-faint:#c8a0a8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;image-rendering:pixelated;}
+  body{background:#fff8f8;font-family:'Pixelify Sans',monospace;min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;overflow-x:hidden;position:relative;}
+  body::before{content:'';position:fixed;top:0;left:0;right:0;height:6px;
+    background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 20px,#fff 20px,#fff 40px);z-index:100;}
+  body::after{content:'';position:fixed;inset:0;
+    background-image:radial-gradient(circle,rgba(200,16,46,.05) 1px,transparent 1px);
+    background-size:24px 24px;pointer-events:none;z-index:0;}
+
+  /* ── FLASH ── */
+  #flash{position:fixed;inset:0;background:white;opacity:0;pointer-events:none;z-index:300;transition:opacity .08s;}
+  #flash.pop{opacity:.85;transition:opacity 0s;}
+
+  /* ── MAIN CONTAINER ── */
+  .container{position:relative;z-index:1;width:100%;max-width:500px;
+    padding:16px 16px 20px;display:flex;flex-direction:column;align-items:center;gap:20px;}
+
+  /* ── HEADER ── */
+  header{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:14px;}
+  .cord-row{display:flex;align-items:center;}
+  .cw{width:48px;height:3px;background:#e0e0e0;}
+  .cr{width:48px;height:3px;background:var(--red);}
+  .cb{width:12px;height:12px;border-radius:50%;border:2px solid;flex-shrink:0;}
+  .cb-r{background:var(--red);border-color:var(--red-dark);box-shadow:0 0 6px rgba(200,16,46,.5);}
+  .cb-w{background:white;border-color:#ccc;}
+  .eco-label{font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;
+    color:var(--text-faint);text-transform:uppercase;margin-top:2px;}
+  header h1{font-family:'Pixelify Sans',monospace;font-size:28px;font-weight:700;color:var(--red);
+    text-shadow:3px 3px 0 rgba(200,16,46,.12);line-height:1.2;}
+  header .sub{font-family:'VT323',monospace;font-size:18px;color:var(--text-faint);letter-spacing:1px;}
+
+  /* ── MARTISOR CORD ── */
+  .martisor-cord {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 4px 0;
+  }
+
+  /* solid red bead on the left */
+  .mc-bead {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: inset -3px -3px 5px rgba(0,0,0,.2), inset 2px 2px 4px rgba(255,255,255,.35);
+  }
+  .mc-bead.red { background: radial-gradient(circle at 35% 35%, #e84060, var(--red) 55%, var(--red-dark)); }
+
+  /* twisted rope in the middle */
+  .mc-rope {
+    display: flex;
+    align-items: center;
+    height: 10px;
+    width: 120px;
+    overflow: hidden;
+    border-radius: 5px;
+    gap: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  }
+  .mc-strand {
+    flex: 1;
+    height: 100%;
+  }
+  .mc-strand.white { background: linear-gradient(180deg, #fff 0%, #e8e8e8 50%, #fff 100%); }
+  .mc-strand.red   { background: linear-gradient(180deg, var(--red-light) 0%, var(--red) 50%, var(--red-dark) 100%); }
+
+  /* solid white bead on the right */
+  .mc-bead-double {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: inset -3px -3px 5px rgba(0,0,0,.15), 0 1px 3px rgba(0,0,0,.1);
+    background: radial-gradient(circle at 35% 35%, #fff, #e0e0e0 55%, #c8c8c8);
+  }
+  .mc-half { display: none; }
+  .counter{font-family:'VT323',monospace;font-size:19px;color:var(--text-light);
+    background:white;border:2px solid var(--red-pale);padding:5px 16px;border-radius:20px;}
+  .counter span{color:var(--red);font-weight:bold;}
+
+  /* ── CTA ── */
+  .cta-section{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;}
+  .cta-icon{display:flex;align-items:center;margin-bottom:4px;}
+  .icon-line{width:32px;height:2px;} .icon-line.w{background:#ddd;} .icon-line.r{background:var(--red);}
+  .icon-bead{width:10px;height:10px;border-radius:50%;border:2px solid;flex-shrink:0;}
+  .icon-bead.red{background:var(--red);border-color:var(--red-dark);}
+  .icon-bead.wht{background:white;border-color:#bbb;}
+
+  .open-btn{font-family:'Nunito',sans-serif;font-size:18px;font-weight:800;background:var(--red);
+    color:white;border:none;box-shadow:0 6px 0 var(--red-dark),0 8px 20px rgba(200,16,46,.35);
+    padding:18px 48px;cursor:pointer;transition:all .12s;border-radius:8px;
+    width:100%;max-width:340px;position:relative;overflow:hidden;}
+  .open-btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+    animation:shimmerBtn 2.5s ease-in-out infinite;}
+  @keyframes shimmerBtn{0%{left:-100%}60%{left:150%}100%{left:150%}}
+  .open-btn:hover{background:var(--red-light);box-shadow:0 6px 0 var(--red-dark),0 12px 28px rgba(200,16,46,.45);transform:translateY(-3px);}
+  .open-btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--red-dark);}
+  .open-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:0 3px 0 var(--red-dark);}
+  .open-btn:disabled::after{display:none;}
+
+  /* ── COLECTIA TA button ── */
+  .collection-btn{
+    font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
+    background:white;color:var(--text-light);border:2px solid var(--red-pale);
+    padding:10px 24px;cursor:pointer;border-radius:8px;transition:all .3s;
+    box-shadow:0 2px 0 var(--red-pale);width:100%;max-width:340px;
+  }
+  .collection-btn:hover{border-color:var(--red);color:var(--red);box-shadow:0 2px 0 var(--red-dark);}
+
+  /* when collection complete — collection btn grows to match open-btn */
+  .collection-btn.complete{
+    font-size:18px;font-weight:800;
+    background:var(--gold);color:white;border:none;
+    box-shadow:0 6px 0 var(--gold-dark,#9a7200),0 8px 20px rgba(200,156,16,.45);
+    padding:18px 48px;
+    animation:goldPulseBtn 2s ease-in-out infinite;
+  }
+  .collection-btn.complete::after{
+    content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+    animation:shimmerBtn 2s ease-in-out infinite;
+  }
+  .collection-btn.complete:hover{
+    background:#d4a800;transform:translateY(-3px);
+    box-shadow:0 8px 0 #9a7200,0 12px 28px rgba(200,156,16,.6);
+  }
+  @keyframes goldPulseBtn{
+    0%,100%{box-shadow:0 6px 0 #9a7200,0 8px 20px rgba(200,156,16,.45);}
+    50%{box-shadow:0 6px 0 #9a7200,0 8px 40px rgba(200,156,16,.8);}
+  }
+
+  /* all-ok — large, well below the buttons */
+  .all-ok{
+    display:none;
+    font-family:'VT323',monospace;font-size:28px;color:var(--red);text-align:center;
+    border:3px solid var(--gold);
+    background:linear-gradient(135deg,#fffbf0,#fff8e0);
+    padding:24px 28px 20px;
+    box-shadow:4px 4px 0 var(--gold);border-radius:4px;
+    width:100%;max-width:340px;
+    margin-top:40px;
+    line-height:1.3;
+  }
+  .all-ok-sub{
+    display:block;
+    font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;
+    color:var(--gold);margin-top:6px;
+  }
+
+  /* ══════════════════════════════════════════
+     CARD REVEAL MODAL
+  ══════════════════════════════════════════ */
+  #revealBackdrop{display:none;position:fixed;inset:0;background:rgba(200,16,46,.08);
+    backdrop-filter:blur(2px);z-index:60;align-items:center;justify-content:center;}
+  #revealBackdrop.open{display:flex;}
+  #revealModal{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;
+    z-index:61;animation:bigPop .5s cubic-bezier(.34,1.56,.64,1) forwards;}
+  @keyframes bigPop{from{transform:scale(.3) rotate(-8deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+
+  .close-modal{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;background:white;
+    border:3px solid var(--red);color:var(--red);padding:12px 32px;cursor:pointer;border-radius:8px;
+    transition:all .15s;box-shadow:0 4px 0 var(--red-dark),0 6px 16px rgba(200,16,46,.2);}
+  .close-modal:hover{background:var(--red);color:white;transform:translateY(-2px);}
+  .close-modal:active{transform:translateY(2px);box-shadow:0 2px 0 var(--red-dark);}
+
+  /* shared card styles */
+  .card{background:white;border:3px solid var(--red-pale);
+    box-shadow:0 8px 32px rgba(200,16,46,.15),4px 4px 0 rgba(200,16,46,.08);
+    padding:22px 20px;width:290px;display:flex;flex-direction:column;align-items:center;
+    gap:12px;position:relative;overflow:hidden;border-radius:6px;}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;}
+  .card.common::before{background:var(--red);}
+  .card.rare::before{background:linear-gradient(90deg,#9333ea,#60a5fa,#9333ea);}
+  .card.epic::before{background:linear-gradient(90deg,var(--red),var(--gold-light),var(--red));}
+  .card.legendary::before{background:linear-gradient(90deg,var(--red),var(--gold-glow),#fff,var(--gold-glow),var(--red));}
+  .card.ultra-rare::before{background:linear-gradient(90deg,var(--gold),#fff,var(--gold-light),#fff,var(--gold));
+    background-size:200%;animation:moveStripe 2s linear infinite;}
+  @keyframes moveStripe{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+  .card.ultra-rare{border-color:var(--gold);box-shadow:0 8px 40px rgba(200,156,16,.35),4px 4px 0 var(--gold);
+    animation:goldPulse 2s ease-in-out infinite;}
+  @keyframes goldPulse{0%,100%{box-shadow:0 8px 30px rgba(200,156,16,.3),4px 4px 0 var(--gold)}
+    50%{box-shadow:0 8px 60px rgba(200,156,16,.6),4px 4px 0 var(--gold)}}
+  .card-rarity{font-family:'Nunito',sans-serif;font-size:10px;letter-spacing:3px;font-weight:800;text-transform:uppercase;}
+  .card-rarity.common{color:var(--red);} .card-rarity.rare{color:#9333ea;}
+  .card-rarity.epic{color:var(--gold);} .card-rarity.legendary{color:var(--red);}
+  .card-rarity.ultra-rare{color:var(--gold);animation:goldGlow 1.5s ease-in-out infinite alternate;}
+  @keyframes goldGlow{from{text-shadow:0 0 6px var(--gold-glow)}to{text-shadow:0 0 20px var(--gold-glow),0 0 40px rgba(200,156,16,.5)}}
+  .art-wrap{width:180px;height:180px;position:relative;display:flex;align-items:center;justify-content:center;}
+  .art-wrap canvas.main-sprite{width:144px;height:144px;position:relative;z-index:1;}
+  .sparkle-ring{position:absolute;inset:0;width:180px;height:180px;pointer-events:none;z-index:0;}
+  .ultra-glow{position:absolute;inset:8px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,220,80,.45) 0%,transparent 70%);
+    animation:holoSpin 3s linear infinite;z-index:0;pointer-events:none;}
+  @keyframes holoSpin{from{transform:rotate(0) scale(1);opacity:.5}50%{transform:rotate(180deg) scale(1.15);opacity:1}to{transform:rotate(360deg) scale(1);opacity:.5}}
+  .card-name{font-family:'Nunito',sans-serif;font-size:18px;font-weight:800;color:var(--text);text-align:center;}
+  .card-msg{font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text-light);
+    text-align:center;line-height:1.5;border-top:1px solid var(--red-pale);padding-top:10px;width:100%;}
+  .card-from{font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--red);
+    text-align:center;line-height:1.5;word-break:break-word;}
+  .card-from .sig{white-space:nowrap;}
+  .card-num{font-family:'Nunito',sans-serif;font-size:9px;font-weight:700;color:#ccc;letter-spacing:1px;}
+
+  /* ══════════════════════════════════════════
+     CAROUSEL SCREEN
+  ══════════════════════════════════════════ */
+  #carouselScreen{
+    display:none;position:fixed;inset:0;z-index:150;
+    background:#1a0408;
+    flex-direction:column;align-items:center;justify-content:flex-start;
+    overflow-y:auto;overflow-x:hidden;
+  }
+  #carouselScreen.open{display:flex;}
+
+  /* green felt table like Balatro */
+  .felt-bg{
+    position:fixed;inset:0;
+    background:radial-gradient(ellipse at 50% 40%,#1e3a2a 0%,#0d1f16 60%,#060f0a 100%);
+    z-index:0;
+  }
+  .felt-pattern{
+    position:fixed;inset:0;z-index:0;opacity:.08;
+    background-image:repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(255,255,255,.15) 20px,rgba(255,255,255,.15) 21px),
+      repeating-linear-gradient(90deg,transparent,transparent 20px,rgba(255,255,255,.15) 20px,rgba(255,255,255,.15) 21px);
+  }
+
+  /* ── SHUFFLE STAGE (card fan) ── */
+  #shuffleStage{
+    position:relative;width:100%;height:260px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    z-index:2;margin-top:60px;
+  }
+
+  /* individual flying card during shuffle */
+  .fly-card{
+    position:absolute;
+    width:72px;height:100px;
+    border-radius:6px;
+    background:white;
+    border:2px solid rgba(200,16,46,.3);
+    box-shadow:0 8px 24px rgba(0,0,0,.6),0 2px 4px rgba(0,0,0,.4);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    transform-origin:center bottom;
+    transition:transform .06s ease, box-shadow .06s;
+    will-change:transform;
+    overflow:hidden;
+  }
+  .fly-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;}
+  .fly-card.common::before{background:var(--red);}
+  .fly-card.rare::before{background:linear-gradient(90deg,#9333ea,#60a5fa);}
+  .fly-card.epic::before{background:linear-gradient(90deg,var(--red),var(--gold-light));}
+  .fly-card.legendary::before{background:linear-gradient(90deg,var(--red),var(--gold-glow),#fff,var(--gold-glow),var(--red));}
+  .fly-card.ultra-rare::before{background:linear-gradient(90deg,var(--gold),#fff,var(--gold-light));animation:moveStripe 1.5s linear infinite;background-size:200%;}
+  .fly-card canvas{width:48px;height:48px;}
+  .fly-card .fc-name{position:absolute;bottom:4px;left:0;right:0;text-align:center;
+    font-family:'Nunito',sans-serif;font-size:7px;font-weight:800;color:var(--text);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px;}
+  .fly-card.mystery{background:#1a2e20;border-color:#2a4a30;cursor:pointer;}
+  .fly-card.mystery canvas{filter:blur(3px) brightness(.5);}
+  .fly-card.mystery .fc-name{color:#4a7a50;}
+  .fly-card.mystery .fc-qs{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:22px;color:rgba(100,200,100,.4);}
+  .fly-card.ultra-rare{border-color:var(--gold);box-shadow:0 8px 24px rgba(0,0,0,.6),0 0 20px rgba(200,156,16,.4);}
+
+  /* hover lift */
+  .fly-card:not(.mystery):hover{transform:translateY(-18px) scale(1.08) !important;
+    box-shadow:0 20px 40px rgba(0,0,0,.7),0 0 20px rgba(200,16,46,.3) !important;z-index:50 !important;}
+  .fly-card.ultra-rare:hover{box-shadow:0 20px 40px rgba(0,0,0,.7),0 0 30px rgba(200,156,16,.6) !important;}
+
+  /* ── CARD SPOTLIGHT (mystery tap) ── */
+  #cardSpotlight{
+    display:none;position:fixed;inset:0;z-index:200;
+    background:rgba(0,0,0,.85);
+    align-items:center;justify-content:center;
+    flex-direction:column;gap:16px;
+  }
+  #cardSpotlight.open{display:flex;}
+  #spotlightInner{animation:bigPop .45s cubic-bezier(.34,1.56,.64,1) forwards;
+    display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .spotlight-hint{font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;
+    color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;}
+
+  /* ── COLLECTION DISPLAY (bottom of carousel screen) ── */
+  #collDisplay{
+    position:relative;z-index:2;width:100%;max-width:500px;
+    padding:20px 16px 100px;
+    display:flex;flex-direction:column;align-items:center;gap:16px;
+  }
+
+  .coll-section-title{font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;
+    color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;text-align:center;}
+  .ultra-coll-title{font-family:'Nunito',sans-serif;font-size:10px;font-weight:800;
+    color:var(--gold);letter-spacing:3px;text-transform:uppercase;text-align:center;
+    animation:goldGlow 1.5s ease-in-out infinite alternate;}
+
+  /* normal grid 4-col */
+  .coll-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;}
+  /* ultra grid 2-col but bigger */
+  .coll-ugrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;}
+
+  .coll-card{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);
+    border-radius:6px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;
+    position:relative;transition:all .2s;cursor:pointer;}
+  .coll-card.collected{background:rgba(255,255,255,.12);border-color:rgba(200,16,46,.5);}
+  .coll-card.ultra-ok{background:rgba(200,156,16,.1);border-color:var(--gold);
+    box-shadow:0 0 12px rgba(200,156,16,.25);}
+  .coll-card.mystery-coll{cursor:pointer;}
+  .coll-card.mystery-coll:hover{background:rgba(255,255,255,.1);border-color:rgba(100,200,100,.4);}
+  .coll-card.collected:hover,.coll-card.ultra-ok:hover{transform:translateY(-3px);}
+
+  .coll-card canvas{width:44px;height:44px;filter:grayscale(1);opacity:.2;}
+  .coll-card.collected canvas,.coll-card.ultra-ok canvas{filter:none;opacity:1;}
+  .coll-card.mystery-coll canvas{filter:blur(3px) brightness(.5);opacity:.6;}
+
+  /* bigger for ultra */
+  .coll-ugrid .coll-card canvas{width:72px;height:72px;}
+
+  .coll-name{font-family:'Nunito',sans-serif;font-size:9px;font-weight:700;
+    color:rgba(255,255,255,.25);text-align:center;}
+  .coll-card.collected .coll-name{color:rgba(255,150,150,.8);}
+  .coll-card.ultra-ok .coll-name{color:var(--gold-light);}
+  .coll-card.mystery-coll .coll-name{display:none;}
+  .coll-mystery-lbl{font-family:'VT323',monospace;font-size:16px;color:rgba(100,200,100,.4);display:none;}
+  .coll-card.mystery-coll .coll-mystery-lbl{display:block;}
+
+  /* ── CLOSE / RESET buttons at bottom of carousel ── */
+  .carousel-btns{position:fixed;bottom:0;left:0;right:0;z-index:10;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    padding:12px 16px 20px;
+    background:linear-gradient(to top,rgba(6,15,10,1) 60%,rgba(6,15,10,0));}
+  .close-carousel-btn{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;
+    background:white;color:var(--red);border:3px solid var(--red);padding:12px 40px;
+    cursor:pointer;border-radius:8px;transition:all .15s;
+    box-shadow:0 4px 0 var(--red-dark),0 6px 16px rgba(200,16,46,.3);}
+  .close-carousel-btn:hover{background:var(--red);color:white;transform:translateY(-2px);}
+  .reset-carousel-btn{font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;
+    background:transparent;color:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.15);
+    padding:7px 18px;cursor:pointer;border-radius:6px;transition:all .15s;}
+  .reset-carousel-btn:hover{color:rgba(255,100,100,.7);border-color:rgba(255,100,100,.3);}
+
+  /* ── SHUFFLE HEADER ── */
+  .shuffle-header{position:relative;z-index:2;text-align:center;padding-top:20px;padding-bottom:4px;
+    width:100%;}
+  .shuffle-header h2{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;
+    color:rgba(255,255,255,.5);letter-spacing:3px;text-transform:uppercase;}
+
+  /* divider */
+  .coll-divider{width:60%;height:1px;background:linear-gradient(90deg,transparent,rgba(200,16,46,.3),transparent);margin:4px 0;}
+
+  /* ── PARTICLES & RINGS ── */
+  #particles{position:fixed;inset:0;pointer-events:none;z-index:55;overflow:hidden;}
+  .particle{position:absolute;animation:fallDown 2s ease-in forwards;}
+  @keyframes fallDown{0%{transform:translateY(-40px) rotate(0) scale(1);opacity:1}100%{transform:translateY(105vh) rotate(500deg) scale(.5);opacity:0}}
+  .ring-burst{position:fixed;border-radius:50%;border:4px solid var(--red);pointer-events:none;
+    z-index:54;animation:ringExpand .7s ease-out forwards;top:50%;left:50%;
+    transform:translate(-50%,-50%) scale(0);}
+  @keyframes ringExpand{0%{transform:translate(-50%,-50%) scale(0);opacity:1}100%{transform:translate(-50%,-50%) scale(8);opacity:0}}
+  .ring-burst.gold{border-color:var(--gold-light);}
+
+  /* footer */
+  footer{width:100%;text-align:center;padding:20px 0 30px;position:relative;z-index:1;}
+  footer p{font-family:'Nunito',sans-serif;font-size:9px;font-weight:700;color:#ddd;
+    letter-spacing:1px;text-transform:uppercase;}
+
+  /* reset btn on main screen */
+  .reset-btn{font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;background:white;
+    color:var(--text-faint);border:2px solid var(--red-pale);padding:9px 22px;cursor:pointer;
+    transition:all .15s;border-radius:6px;box-shadow:0 2px 0 var(--red-pale);}
+  .reset-btn:hover{color:var(--red);border-color:var(--red);box-shadow:0 2px 0 var(--red-dark);}
+
+  /* mini grid on main screen */
+  .section-title{font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;color:var(--red);
+    text-align:center;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+  .ultra-title{font-family:'Nunito',sans-serif;font-size:10px;font-weight:800;color:var(--gold);
+    text-align:center;letter-spacing:3px;text-transform:uppercase;
+    animation:goldGlow 1.5s ease-in-out infinite alternate;margin-top:-8px;}
+  .collection-section{width:100%;}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;width:100%;}
+  .ugrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;}
+  .mini-card{background:white;border:2px solid var(--red-pale);padding:7px 4px;
+    display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;
+    border-radius:4px;transition:all .15s;}
+  .mini-card.collected{border-color:var(--red);box-shadow:2px 2px 0 rgba(200,16,46,.12);}
+  .mini-card.ultra-ok{border-color:var(--gold);box-shadow:2px 2px 0 var(--gold),0 0 10px rgba(200,156,16,.25);}
+  .mini-card.collected:hover,.mini-card.ultra-ok:hover{transform:translateY(-3px);cursor:pointer;}
+  .mini-card canvas{width:44px;height:44px;opacity:.18;filter:grayscale(1);}
+  .mini-card.mystery canvas{filter:blur(3px) grayscale(.3);opacity:.45;}
+  .mini-card.collected canvas,.mini-card.ultra-ok canvas{opacity:1;filter:none;}
+  .mini-name{font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;
+    color:var(--text);text-align:center;opacity:.35;line-height:1.1;}
+  .mini-card.collected .mini-name{opacity:1;color:var(--red);}
+  .mini-card.ultra-ok .mini-name{opacity:1;color:var(--gold);}
+  .mini-card.mystery .mini-name{display:none;}
+  .mystery-lbl{font-family:'VT323',monospace;font-size:14px;color:var(--gold);
+    text-align:center;line-height:1.1;display:none;}
+  .mini-card.mystery .mystery-lbl{display:block;}
+  .new-badge{position:absolute;top:-5px;right:-5px;background:var(--red);color:white;
+    font-family:'Nunito',sans-serif;font-size:7px;font-weight:800;padding:2px 4px;border-radius:3px;display:none;}
+  .mini-card.new-card .new-badge{display:block;}
+  .tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:white;border:2px solid var(--red);padding:7px 10px;font-family:'Nunito',sans-serif;
+    font-size:12px;font-weight:700;color:var(--text);z-index:30;pointer-events:none;
+    box-shadow:3px 3px 0 rgba(200,16,46,.15);border-radius:4px;max-width:200px;
+    white-space:normal;text-align:center;line-height:1.4;}
+  .mini-card:hover .tip{display:block;}
+  .divider{width:80%;height:2px;
+    background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 8px,transparent 8px,transparent 14px);
+    border:none;opacity:.18;}
+</style>
+</head>
+<body>
+
+<div id="flash"></div>
+<div id="particles"></div>
+
+<!-- ══ REVEAL MODAL ══ -->
+<div id="revealBackdrop" onclick="closeModal(event)">
+  <div id="revealModal">
+    <div class="card common" id="mainCard">
+      <div class="card-rarity common" id="cRarity">• COMMON •</div>
+      <div class="art-wrap" id="artWrap">
+        <canvas class="main-sprite" id="cCanvas" width="32" height="32"></canvas>
+        <canvas class="sparkle-ring" id="sparkCanvas" width="180" height="180"></canvas>
+      </div>
+      <div class="card-name" id="cName">—</div>
+      <div class="card-msg"  id="cMsg">—</div>
+      <div class="card-from" id="cFrom">—</div>
+      <div class="card-num"  id="cNum">#000</div>
+    </div>
+    <button class="close-modal" onclick="closeReveal()">✓ Am primit martisorul</button>
+  </div>
+</div>
+
+<!-- ══ CARD SPOTLIGHT (mystery tap in carousel) ══ -->
+<div id="cardSpotlight" onclick="closeSpotlight(event)">
+  <div id="spotlightInner">
+    <div class="card common" id="spotCard">
+      <div class="card-rarity common" id="spRarity">• COMMON •</div>
+      <div class="art-wrap" id="spArtWrap">
+        <canvas class="main-sprite" id="spCanvas" width="32" height="32"></canvas>
+        <canvas class="sparkle-ring" id="spSparkCanvas" width="180" height="180"></canvas>
+      </div>
+      <div class="card-name" id="spName">—</div>
+      <div class="card-msg"  id="spMsg">—</div>
+      <div class="card-from" id="spFrom">—</div>
+      <div class="card-num"  id="spNum">#000</div>
+    </div>
+    <div class="spotlight-hint">Atinge oriunde pentru a inchide</div>
+  </div>
+</div>
+
+<!-- ══ CAROUSEL SCREEN ══ -->
+<div id="carouselScreen">
+  <div class="felt-bg"></div>
+  <div class="felt-pattern"></div>
+
+  <div class="shuffle-header">
+    <h2>✦ Colectia Ta ✦</h2>
+  </div>
+
+  <!-- FAN STAGE -->
+  <div id="shuffleStage"></div>
+
+  <!-- COLLECTION DISPLAY -->
+  <div id="collDisplay">
+    <div class="coll-section-title">Martisoarelor Tale</div>
+    <div class="coll-grid" id="collNormGrid"></div>
+
+    <div class="coll-divider"></div>
+    <div class="ultra-coll-title">✦ Ultra Rare ✦</div>
+    <div class="coll-ugrid" id="collUltraGrid"></div>
+  </div>
+
+  <!-- FIXED BOTTOM BUTTONS -->
+  <div class="carousel-btns">
+    <button class="close-carousel-btn" onclick="closeCarousel()">← Inapoi</button>
+    <button class="reset-carousel-btn" onclick="resetAll()">↺ reseteaza colectia</button>
+  </div>
+</div>
+
+<!-- ══ MAIN SCREEN ══ -->
+<div class="container">
+  <header>
+    <div class="martisor-cord">
+      <div class="mc-bead red"></div>
+      <div class="mc-rope">
+        <div class="mc-strand white"></div>
+        <div class="mc-strand red"></div>
+        <div class="mc-strand white"></div>
+        <div class="mc-strand red"></div>
+        <div class="mc-strand white"></div>
+        <div class="mc-strand red"></div>
+      </div>
+      <div class="mc-bead-double">
+        <div class="mc-half white"></div>
+        <div class="mc-half red"></div>
+      </div>
+    </div>
+    <div class="eco-label">Martisor Digital • Ecologic • Bio</div>
+    <h1>Martisor</h1>
+    <div class="sub">Colectie Limitata • 1 Martie 2026</div>
+  </header>
+
+  <div class="counter">Colectat: <span id="cnt">0</span> / 12</div>
+
+  <div class="cta-section">
+    <div class="martisor-cord">
+      <div class="mc-bead red"></div>
+      <div class="mc-rope">
+        <div class="mc-strand white"></div>
+        <div class="mc-strand red"></div>
+        <div class="mc-strand white"></div>
+        <div class="mc-strand red"></div>
+        <div class="mc-strand white"></div>
+        <div class="mc-strand red"></div>
+      </div>
+      <div class="mc-bead-double">
+        <div class="mc-half white"></div>
+        <div class="mc-half red"></div>
+      </div>
+    </div>
+    <button class="open-btn" id="openBtn" onclick="openBox()">✦ Deschide Martisorul ✦</button>
+    <button class="collection-btn" id="collectionBtn" onclick="openCarousel()">🃏 Vezi Colectia Ta</button>
+  </div>
+
+  <div class="all-ok" id="allOk">
+    🌸 Colectie Completa! 🌸
+    <div class="all-ok-sub">Primavara e a voastra!</div>
+  </div>
+
+</div>
+
+<footer><p>helloadrian copyright 2026 · Creative Studio</p></footer>
+
+<script>
+/* ════════════════════════
+   PIXEL HELPER
+════════════════════════ */
+function px(ctx,x,y,c,w=1,h=1){ctx.fillStyle=c;ctx.fillRect(x,y,w,h);}
+
+/* ════════════════════════
+   SPRITES
+════════════════════════ */
+const DRAW={
+  cosar(ctx){
+    const[br,ht,ld,re,sk]=['#2c2c2c','#1a1a1a','#a0522d','#cc2200','#f4a460'];
+    px(ctx,0,10,ld,2,22);px(ctx,6,10,ld,2,22);
+    [12,16,20,24,28].forEach(y=>px(ctx,0,y,ld,8,1));
+    px(ctx,9,14,br,14,10);px(ctx,10,15,'#3d3d3d',10,8);
+    px(ctx,11,9,sk,10,7);px(ctx,12,10,'#e8966e',8,5);
+    px(ctx,12,11,'#111',2,2);px(ctx,18,11,'#111',2,2);
+    px(ctx,12,11,'#fff',1,1);px(ctx,18,11,'#fff',1,1);
+    px(ctx,13,14,'#111',6,1);px(ctx,12,15,sk,1,1);px(ctx,19,15,sk,1,1);
+    px(ctx,10,5,ht,12,1);px(ctx,12,1,ht,8,5);px(ctx,13,2,'#2e2e2e',6,3);
+    px(ctx,12,5,re,8,1);
+    px(ctx,7,15,br,2,5);px(ctx,22,15,br,2,5);
+    px(ctx,11,24,'#111',4,4);px(ctx,8,26,'#111',4,2);
+    px(ctx,17,24,'#111',4,4);px(ctx,17,26,'#111',4,2);
+    px(ctx,28,18,'#fff',2,8);px(ctx,27,26,re,4,4);
+  },
+  ghiocel(ctx){
+    px(ctx,15,16,'#3a7d44',2,16);
+    px(ctx,8,19,'#2d6a35',7,3);px(ctx,9,18,'#2d6a35',5,1);
+    px(ctx,17,17,'#2d6a35',7,3);px(ctx,18,16,'#2d6a35',5,1);
+    px(ctx,12,10,'#3a7d44',2,6);
+    px(ctx,10,7,'#f0f0f0',12,2);px(ctx,9,8,'#f0f0f0',14,5);
+    px(ctx,8,10,'#f0f0f0',3,4);px(ctx,21,10,'#f0f0f0',3,4);
+    px(ctx,12,8,'#ffe066',8,6);px(ctx,13,7,'#ffe066',6,1);
+    px(ctx,13,9,'#fff',2,2);
+    px(ctx,10,11,'#7bc67e',2,3);px(ctx,20,11,'#7bc67e',2,3);px(ctx,14,7,'#7bc67e',4,1);
+    px(ctx,28,18,'#fff',2,8);px(ctx,27,26,'#cc2200',4,4);
+  },
+  potcoava(ctx){
+    const[ir,sh,dk]=['#8a8a9a','#c8c8d8','#444455'];
+    px(ctx,7,5,ir,4,20);px(ctx,21,5,ir,4,20);px(ctx,9,3,ir,14,4);px(ctx,8,4,ir,16,2);
+    px(ctx,9,7,'#fff8f8',14,16);px(ctx,11,5,'#fff8f8',10,3);
+    px(ctx,7,7,sh,2,10);px(ctx,8,4,sh,4,2);
+    [[8,9],[8,15],[22,9],[22,15],[13,4],[17,4]].forEach(([x,y])=>px(ctx,x,y,dk,2,2));
+    px(ctx,7,23,dk,4,4);px(ctx,21,23,dk,4,4);
+    [[5,3],[25,5],[15,1],[3,13],[27,13]].forEach(([x,y])=>px(ctx,x,y,'#ffe066',2,2));
+    px(ctx,28,18,'#fff',2,8);px(ctx,27,26,'#cc2200',4,4);
+  },
+  trifoi(ctx){
+    const[g,d,l,s]=['#3a9a4a','#1d6b28','#6bd47a','#5a4020'];
+    px(ctx,15,18,s,2,14);px(ctx,12,22,s,3,2);
+    [[13,5,6,6],[13,14,6,6],[5,10,6,6],[21,10,6,6]].forEach(([x,y,w,h])=>px(ctx,x,y,g,w,h));
+    [[12,6,8,4],[12,15,8,4],[4,11,8,4],[20,11,8,4]].forEach(([x,y,w,h])=>px(ctx,x,y,g,w,h));
+    [[14,7,3,2],[14,15,3,2],[6,12,2,2],[22,12,2,2]].forEach(([x,y,w,h])=>px(ctx,x,y,l,w,h));
+    [[12,5],[18,5],[12,17],[18,17]].forEach(([x,y])=>px(ctx,x,y,d,2,2));
+    px(ctx,15,10,'#ffe066',2,2);px(ctx,15,9,'#ffe066',2,1);
+    px(ctx,14,10,'#ffe066',1,2);px(ctx,17,10,'#ffe066',1,2);
+    px(ctx,28,18,'#fff',2,8);px(ctx,27,26,'#cc2200',4,4);
+  },
+  buburuza(ctx){
+    const[r,b,w,s]=['#dd2222','#1a1a1a','#fff','#ee6666'];
+    px(ctx,9,10,r,14,14);px(ctx,7,12,r,18,10);px(ctx,8,11,r,16,12);
+    px(ctx,10,9,r,12,2);px(ctx,10,23,r,12,2);
+    px(ctx,11,11,s,5,6);px(ctx,10,12,s,2,4);
+    px(ctx,11,6,b,10,5);px(ctx,10,7,b,12,4);
+    px(ctx,11,7,w,3,3);px(ctx,18,7,w,3,3);
+    px(ctx,12,8,b,2,2);px(ctx,19,8,b,2,2);px(ctx,12,8,'#4488ff',1,1);px(ctx,19,8,'#4488ff',1,1);
+    px(ctx,15,10,b,2,14);
+    [[10,13],[18,13],[10,18],[18,18]].forEach(([x,y])=>px(ctx,x,y,b,3,3));
+    px(ctx,14,22,b,4,2);
+    px(ctx,12,4,b,2,3);px(ctx,18,3,b,2,4);px(ctx,10,3,b,3,2);px(ctx,19,2,b,3,2);
+    [[7,16],[6,18],[7,20]].forEach(([x,y])=>{px(ctx,x,y,b,3,1);px(ctx,x+15,y,b,3,1);});
+    px(ctx,28,16,'#fff',2,10);px(ctx,27,26,'#cc2200',4,4);
+  },
+  soare(ctx){
+    const[s,r,c]=['#ffc400','#ffdd55','#fff3aa'];
+    [[14,0],[14,28],[0,14],[28,14],[4,4],[24,4],[4,24],[24,24]].forEach(([x,y])=>px(ctx,x,y,r,4,4));
+    px(ctx,7,7,s,18,18);px(ctx,9,5,s,14,22);px(ctx,5,9,s,22,14);
+    px(ctx,10,10,c,12,12);px(ctx,12,9,c,8,14);px(ctx,9,12,c,14,8);
+    px(ctx,12,12,'#fff',8,8);
+    px(ctx,11,14,'#cc7700',4,3);px(ctx,17,14,'#cc7700',4,3);
+    px(ctx,12,15,'#111',3,2);px(ctx,18,15,'#111',3,2);
+    px(ctx,12,15,'#fff',1,1);px(ctx,18,15,'#fff',1,1);
+    px(ctx,12,20,'#cc7700',8,2);px(ctx,13,21,'#111',6,1);
+    px(ctx,10,18,'#ffaaaa',3,2);px(ctx,19,18,'#ffaaaa',3,2);
+    px(ctx,28,16,'#fff',2,10);px(ctx,27,26,'#cc2200',4,4);
+  },
+  floare(ctx){
+    const[pt,ce,lf,st]=['#ff6eb4','#ffe066','#3a9a4a','#2d7a35'];
+    px(ctx,15,17,st,2,15);px(ctx,8,21,lf,7,4);px(ctx,7,22,lf,4,2);
+    px(ctx,17,19,lf,7,4);px(ctx,18,20,lf,4,2);
+    [[14,2,4,6],[14,12,4,6],[7,8,6,5],[19,8,6,5],[9,3,5,5],[18,3,5,5],[9,12,5,5],[18,12,5,5]].forEach(([x,y,w,h])=>px(ctx,x,y,pt,w,h));
+    px(ctx,15,3,'#ffaacc',2,3);
+    px(ctx,11,7,ce,10,7);px(ctx,10,8,ce,12,5);
+    px(ctx,12,8,'#fff',3,2);
+    [[12,9],[16,9],[14,11]].forEach(([x,y])=>px(ctx,x,y,'#cc8800',2,2));
+    px(ctx,28,18,'#fff',2,8);px(ctx,27,26,'#cc2200',4,4);
+  },
+  inima(ctx){
+    const[r,pk,w]=['#ee2244','#ff6688','#fff'];
+    px(ctx,5,8,r,8,7);px(ctx,19,8,r,8,7);px(ctx,3,10,r,26,8);
+    px(ctx,5,6,r,7,4);px(ctx,20,6,r,7,4);
+    px(ctx,8,18,r,16,4);px(ctx,10,21,r,12,3);px(ctx,12,23,r,8,3);
+    px(ctx,14,25,r,4,3);px(ctx,15,27,r,2,2);
+    px(ctx,7,9,pk,6,4);px(ctx,19,9,pk,6,4);px(ctx,6,11,pk,20,6);
+    px(ctx,9,17,pk,14,4);px(ctx,11,21,pk,10,3);
+    px(ctx,7,9,w,4,3);px(ctx,8,8,w,4,3);px(ctx,20,9,'#ffbbcc',4,2);
+    px(ctx,15,14,w,2,5);px(ctx,13,16,w,5,2);
+    px(ctx,28,16,'#fff',2,10);px(ctx,27,26,'#cc2200',4,4);
+  },
+  bean(ctx){
+    const[br,ch,tn,dk]=['#5c3218','#8b5a2b','#c47a3a','#3a1e08'];
+    px(ctx,3,5,br,7,9);px(ctx,4,4,br,5,3);px(ctx,4,6,ch,4,7);
+    px(ctx,20,2,br,9,13);px(ctx,21,1,br,7,3);px(ctx,21,3,ch,7,10);
+    px(ctx,8,9,br,16,14);px(ctx,7,11,br,18,11);px(ctx,9,8,br,14,2);
+    px(ctx,10,10,ch,12,11);px(ctx,9,11,ch,14,9);
+    px(ctx,9,10,tn,4,3);px(ctx,19,10,tn,4,3);
+    px(ctx,10,11,'#3a2a1a',4,4);px(ctx,18,11,'#3a2a1a',4,4);
+    px(ctx,11,12,'#6b4c2a',3,3);px(ctx,19,12,'#6b4c2a',3,3);
+    px(ctx,11,12,'#c0a060',2,2);px(ctx,19,12,'#c0a060',2,2);
+    px(ctx,11,12,'#e8d8a0',1,1);px(ctx,19,12,'#e8d8a0',1,1);
+    px(ctx,12,12,'#fff',1,1);px(ctx,20,12,'#fff',1,1);
+    px(ctx,11,17,tn,10,7);px(ctx,10,18,tn,12,5);px(ctx,12,17,ch,8,5);
+    px(ctx,13,17,'#8b6060',6,3);px(ctx,14,16,'#8b6060',4,1);px(ctx,14,17,'#c8a0a0',2,1);
+    px(ctx,14,21,dk,4,1);px(ctx,13,22,dk,2,1);px(ctx,17,22,dk,2,1);
+    px(ctx,12,22,'#d4a05a',8,3);
+    px(ctx,10,23,br,12,6);px(ctx,9,24,ch,14,5);
+    px(ctx,13,24,'#e8d8c0',6,5);
+    px(ctx,28,14,'#fff',2,10);px(ctx,27,24,'#cc2200',4,5);
+  },
+  gogo(ctx){
+    const[or,lt,dk,wh,st]=['#c86818','#e08840','#7a3a08','#f5ece0','#a05020'];
+    px(ctx,7,12,dk,18,1);
+    px(ctx,6,13,dk,1,14);px(ctx,7,27,dk,1,1);
+    px(ctx,25,13,dk,1,14);px(ctx,24,27,dk,1,1);
+    px(ctx,7,27,dk,18,1);
+    px(ctx,7,13,or,18,14);
+    px(ctx,8,12,or,16,1);
+    px(ctx,9,13,lt,14,5);
+    px(ctx,10,12,lt,12,1);
+    [8,11,14,17,21].forEach(x=>px(ctx,x,13,st,1,12));
+    px(ctx,9,22,wh,14,4);px(ctx,8,23,wh,16,3);
+    px(ctx,8,25,or,5,2);px(ctx,8,26,wh,4,1);
+    px(ctx,8,27,dk,1,1);px(ctx,10,27,dk,1,1);px(ctx,12,27,dk,1,1);
+    px(ctx,19,25,or,5,2);px(ctx,20,26,wh,4,1);
+    px(ctx,20,27,dk,1,1);px(ctx,22,27,dk,1,1);px(ctx,24,27,dk,1,1);
+    px(ctx,9,4,dk,14,1);
+    px(ctx,8,5,dk,1,8);
+    px(ctx,23,5,dk,1,8);
+    px(ctx,9,12,dk,14,1);
+    px(ctx,9,5,or,14,7);
+    px(ctx,10,4,or,12,1);
+    px(ctx,10,5,lt,12,4);
+    px(ctx,9,1,dk,5,4);px(ctx,10,0,dk,3,2);
+    px(ctx,10,2,'#e08090',3,2);px(ctx,9,2,or,1,3);px(ctx,14,1,or,1,4);
+    px(ctx,18,1,dk,5,4);px(ctx,19,0,dk,3,2);
+    px(ctx,19,2,'#e08090',3,2);px(ctx,18,2,or,1,3);px(ctx,23,1,or,1,4);
+    px(ctx,10,8,dk,5,1);px(ctx,10,9,dk,5,2);
+    px(ctx,11,9,'#8b5020',3,2);px(ctx,11,9,'#c07030',2,1);px(ctx,11,9,'#fff',1,1);
+    px(ctx,18,8,dk,5,1);px(ctx,18,9,dk,5,2);
+    px(ctx,19,9,'#8b5020',3,2);px(ctx,19,9,'#c07030',2,1);px(ctx,19,9,'#fff',1,1);
+    px(ctx,15,10,'#e07060',2,2);
+    px(ctx,14,12,dk,2,1);px(ctx,18,12,dk,2,1);
+    [10,13,16,20].forEach(x=>px(ctx,x,5,st,1,3));
+    px(ctx,2,10,'#d0b890',6,1);px(ctx,2,11,'#d0b890',5,1);
+    px(ctx,24,10,'#d0b890',6,1);px(ctx,25,11,'#d0b890',5,1);
+    px(ctx,25,20,or,3,5);px(ctx,26,19,or,2,2);px(ctx,26,21,lt,1,4);
+    px(ctx,25,19,dk,1,1);px(ctx,28,20,dk,1,6);px(ctx,25,25,dk,3,1);
+    px(ctx,29,14,'#fff',2,10);px(ctx,28,24,'#cc2200',3,5);
+  },
+  mitsi(ctx){
+    const[wh,or,lt,dk,pk]=['#f8f4f0','#c87030','#e8a860','#7a3a08','#f0c0a0'];
+    px(ctx,6,15,wh,20,13);px(ctx,5,17,wh,22,11);px(ctx,7,14,wh,18,2);
+    px(ctx,8,14,or,14,6);px(ctx,7,15,or,4,4);px(ctx,19,15,or,6,5);
+    px(ctx,8,14,lt,10,3);
+    px(ctx,24,20,or,5,8);px(ctx,25,19,or,4,3);px(ctx,22,26,or,6,3);px(ctx,25,21,lt,2,6);
+    px(ctx,10,18,wh,12,9);px(ctx,9,20,wh,14,6);
+    px(ctx,7,26,wh,6,3);px(ctx,18,26,wh,6,3);
+    px(ctx,8,27,pk,4,2);px(ctx,19,27,pk,4,2);
+    px(ctx,8,28,dk,1,1);px(ctx,10,28,dk,1,1);px(ctx,19,28,dk,1,1);px(ctx,21,28,dk,1,1);
+    px(ctx,10,5,wh,12,11);px(ctx,9,6,wh,14,10);px(ctx,11,4,wh,10,3);
+    px(ctx,10,4,or,12,5);px(ctx,9,5,or,4,5);px(ctx,19,5,or,4,5);
+    px(ctx,11,4,lt,10,2);
+    [11,14,17].forEach(x=>px(ctx,x,5,dk,1,3));
+    px(ctx,11,9,wh,10,7);px(ctx,10,10,wh,12,6);
+    px(ctx,9,1,or,4,5);px(ctx,10,0,or,3,2);px(ctx,10,2,pk,2,3);px(ctx,9,4,or,2,2);
+    px(ctx,19,1,or,4,5);px(ctx,19,0,or,3,2);px(ctx,20,2,pk,2,3);px(ctx,21,4,or,2,2);
+    px(ctx,10,9,dk,5,4);px(ctx,17,9,dk,5,4);
+    px(ctx,11,10,'#6a8030',4,3);px(ctx,18,10,'#6a8030',4,3);
+    px(ctx,11,10,'#9ab840',3,2);px(ctx,18,10,'#9ab840',3,2);
+    px(ctx,11,10,'#fff',1,1);px(ctx,18,10,'#fff',1,1);
+    px(ctx,12,11,'#111',1,2);px(ctx,19,11,'#111',1,2);
+    px(ctx,15,14,'#e07090',2,2);px(ctx,14,14,'#e07090',1,1);px(ctx,17,14,'#e07090',1,1);
+    px(ctx,15,16,dk,2,1);px(ctx,14,17,dk,1,1);px(ctx,17,17,dk,1,1);
+    px(ctx,2,11,'#b8b0a0',7,1);px(ctx,2,12,'#b8b0a0',6,1);px(ctx,2,13,'#b8b0a0',5,1);
+    px(ctx,23,11,'#b8b0a0',7,1);px(ctx,24,12,'#b8b0a0',6,1);px(ctx,25,13,'#b8b0a0',5,1);
+    px(ctx,10,13,or,3,2);px(ctx,19,13,or,3,2);
+    px(ctx,29,14,'#fff',2,10);px(ctx,28,24,'#cc2200',3,5);
+  },
+  yarny(ctx){
+    const[or,lt,wh,dk,st]=['#c87832','#e8a055','#f0ece0','#8b4a18','#a05020'];
+    px(ctx,3,18,or,4,8);px(ctx,4,17,or,3,2);px(ctx,5,26,or,6,3);px(ctx,4,25,or,2,2);
+    px(ctx,5,18,lt,2,7);
+    px(ctx,7,16,or,18,12);px(ctx,6,18,or,20,9);px(ctx,8,15,or,16,2);
+    px(ctx,9,16,lt,14,10);px(ctx,8,17,lt,16,8);
+    px(ctx,11,20,wh,10,8);px(ctx,10,22,wh,12,5);
+    [9,13,17,21].forEach(x=>px(ctx,x,16,dk,1,4));
+    px(ctx,10,7,or,12,10);px(ctx,9,8,or,14,8);px(ctx,11,6,or,10,3);
+    px(ctx,11,8,lt,10,8);px(ctx,10,9,lt,12,6);
+    px(ctx,10,4,or,4,5);px(ctx,9,3,or,3,3);px(ctx,10,5,'#ff9090',2,3);
+    px(ctx,18,4,or,4,5);px(ctx,19,3,or,3,3);px(ctx,19,5,'#ff9090',2,3);
+    px(ctx,12,10,wh,8,6);px(ctx,11,11,wh,10,5);
+    px(ctx,11,10,dk,4,4);px(ctx,17,10,dk,4,4);
+    px(ctx,12,11,'#5a8a30',3,3);px(ctx,18,11,'#5a8a30',3,3);
+    px(ctx,12,11,'#80cc40',2,2);px(ctx,18,11,'#80cc40',2,2);
+    px(ctx,12,11,'#fff',1,1);px(ctx,18,11,'#fff',1,1);
+    px(ctx,13,12,'#1a1a1a',1,2);px(ctx,19,12,'#1a1a1a',1,2);
+    px(ctx,15,15,'#e07090',2,2);
+    px(ctx,14,17,dk,2,1);px(ctx,17,17,dk,2,1);px(ctx,15,18,wh,2,1);
+    px(ctx,4,14,'#d0c0a0',6,1);px(ctx,4,15,'#d0c0a0',5,1);
+    px(ctx,22,14,'#d0c0a0',6,1);px(ctx,23,15,'#d0c0a0',5,1);
+    [11,14,17,20].forEach(x=>px(ctx,x,8,st,1,2));
+    px(ctx,9,26,or,5,3);px(ctx,18,26,or,5,3);
+    px(ctx,9,27,wh,4,2);px(ctx,19,27,wh,4,2);
+    [9,11,13].forEach(x=>px(ctx,x,28,dk,1,1));
+    [19,21,23].forEach(x=>px(ctx,x,28,dk,1,1));
+    px(ctx,28,14,'#fff',2,10);px(ctx,27,24,'#cc2200',4,5);
+  }
+};
+
+/* ════════════════════════
+   DATA
+════════════════════════ */
+const M=[
+  {id:0,key:'cosar',   name:'Cosarul',       rarity:'legendary',  lbl:'★ LEGENDARY ★',
+   msg:'Ti-a iesit cosarul in drum – noroc mare te urmareste azi!',
+   from:'Cu drag, de la <span class="sig">Ady, Andy & Bean</span> 🎩',num:'#888'},
+  {id:1,key:'ghiocel', name:'Ghiocelul',     rarity:'rare',       lbl:'◈ RARE ◈',
+   msg:'Primul ghiocel iti aduce speranta si un nou inceput!',
+   from:'Primavara incepe azi! — <span class="sig">Ady, Andy & Bean</span> 🌼',num:'#333'},
+  {id:2,key:'potcoava',name:'Potcoava',       rarity:'rare',       lbl:'◈ RARE ◈',
+   msg:'Potcoava aduce noroc – drumul tau e deschis!',
+   from:'Drumuri norocoase! — <span class="sig">Ady, Andy & Bean</span> 🐴',num:'#777'},
+  {id:3,key:'trifoi',  name:'Trifoi 4 Foi',  rarity:'epic',       lbl:'⬟ EPIC ⬟',
+   msg:'Patru foi de trifoi – norocul ti-a ales ziua!',
+   from:'Patru foi, patru daruri! — <span class="sig">Ady, Andy & Bean</span> 🍀',num:'#444'},
+  {id:4,key:'buburuza',name:'Buburuza',       rarity:'common',     lbl:'• COMMON •',
+   msg:'Buburuza iti aduce bucurie – numara punctele si binecuvantarile!',
+   from:'Bine ai venit in primavara! — <span class="sig">Ady, Andy & Bean</span> 🐞',num:'#222'},
+  {id:5,key:'soare',   name:'Soarele',        rarity:'legendary',  lbl:'★ LEGENDARY ★',
+   msg:'Soarele primaverii straluceste pentru tine – o zi de aur!',
+   from:'Sa te incalzeasca tot anul! — <span class="sig">Ady, Andy & Bean</span> ☀️',num:'#111'},
+  {id:6,key:'floare',  name:'Floarea',        rarity:'epic',       lbl:'⬟ EPIC ⬟',
+   msg:'Floarea ti-a inflorit calea – orice dorinta prinde radacini!',
+   from:'Infloreste frumos! — <span class="sig">Ady, Andy & Bean</span> 🌸',num:'#555'},
+  {id:7,key:'inima',   name:'Inima',          rarity:'common',     lbl:'• COMMON •',
+   msg:'Inima de martisor iti trimite toata dragostea!',
+   from:'Cu toata inima — <span class="sig">Ady, Andy & Bean</span> ❤️',num:'#999'},
+  {id:8,key:'bean',    name:'Bean',           rarity:'ultra-rare', lbl:'✦ ULTRA RARE ✦',
+   msg:'Bean a iesit sa iti ureze o primavara cu jucarii, plimbari si blanita calda!',
+   from:'Ham ham! 🐾 — <span class="sig">Ady, Andy & Bean</span>',num:'#001 / 10'},
+  {id:9,key:'yarny',   name:'Yarny',          rarity:'ultra-rare', lbl:'✦ ULTRA RARE ✦',
+   msg:'Yarny ti-a rezervat un loc pe canapea langa el – accepti norocul?',
+   from:'Miau. 🐱 — de la nasii Irina & Roberto',num:'#002 / 10'},
+  {id:10,key:'gogo',   name:'Gogo',           rarity:'ultra-rare', lbl:'✦ ULTRA RARE ✦',
+   msg:'Gogo s-a trezit special pentru tine – primesti noroc dublu, el face somnul in locul tau!',
+   from:'Purr... 🧡 — de la nasul Mihai',num:'#003 / 10'},
+  {id:11,key:'mitsi',  name:'Mitsi',          rarity:'ultra-rare', lbl:'✦ ULTRA RARE ✦',
+   msg:'Mitsi te priveste cu eleganta si iti transmite ca esti royalty in aceasta primavara!',
+   from:'*nas ridicat* 🤍 — de la nasa Ana',num:'#004 / 10'}
+];
+const NORM_IDS=[0,1,2,3,4,5,6,7];
+const ULTRA_IDS=[8,9,10,11];
+
+/* ════════════════════════
+   STATE
+════════════════════════ */
+let collected=JSON.parse(localStorage.getItem('mrt26')||'[]');
+let lastId=null;
+const save=()=>localStorage.setItem('mrt26',JSON.stringify(collected));
+
+/* ════════════════════════
+   AUDIO
+════════════════════════ */
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playRevealSound(rarity){
+  try{
+    const ac=getAudio();
+    if(rarity==='ultra-rare')playUltraSound(ac);
+    else if(rarity==='legendary')playFanfare(ac);
+    else if(rarity==='epic')playMagic(ac);
+    else playPop(ac);
+  }catch(e){}
+}
+function playPop(ac){const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='sine';o.frequency.setValueAtTime(400,ac.currentTime);o.frequency.exponentialRampToValueAtTime(800,ac.currentTime+.1);g.gain.setValueAtTime(.4,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.3);o.start(ac.currentTime);o.stop(ac.currentTime+.3);}
+function playMagic(ac){[0,.07,.14,.21].forEach((t,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='sine';o.frequency.value=[523,659,784,1047][i];g.gain.setValueAtTime(.3,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t+.25);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.25);});}
+function playFanfare(ac){[[523,0],[659,0],[784,.05],[1047,.1],[1319,.18]].forEach(([freq,t])=>{const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='triangle';o.frequency.value=freq;g.gain.setValueAtTime(.22,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t+.6);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.65);});}
+function playUltraSound(ac){const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='sawtooth';o.frequency.setValueAtTime(200,ac.currentTime);o.frequency.exponentialRampToValueAtTime(1800,ac.currentTime+.6);g.gain.setValueAtTime(.15,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.7);o.start();o.stop(ac.currentTime+.7);[.2,.35,.5].forEach((t,i)=>{const o2=ac.createOscillator(),g2=ac.createGain();o2.connect(g2);g2.connect(ac.destination);o2.type='sine';o2.frequency.value=[1200,1500,1800][i];g2.gain.setValueAtTime(.25,ac.currentTime+t);g2.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t+.3);o2.start(ac.currentTime+t);o2.stop(ac.currentTime+t+.3);});}
+function playCardFlip(){try{const ac=getAudio(),o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='sine';o.frequency.setValueAtTime(300,ac.currentTime);o.frequency.exponentialRampToValueAtTime(600,ac.currentTime+.05);g.gain.setValueAtTime(.15,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.12);o.start(ac.currentTime);o.stop(ac.currentTime+.12);}catch(e){}}
+
+/* ════════════════════════
+   SPARKLES
+════════════════════════ */
+function drawSparkles(cv,rarity,sz=180){
+  const ctx=cv.getContext('2d');ctx.clearRect(0,0,sz,sz);
+  const pal={legendary:['#c8102e','#ffd700','#fff','#ffaaaa'],epic:['#c8102e','#f5c842','#ff6eb4','#fff'],rare:['#9333ea','#60a5fa','#fff'],common:['#c8102e','#ffaaaa','#fff'],'ultra-rare':['#d4a017','#f5c842','#ffe066','#fff','#ffcc44']}[rarity]||['#c8102e','#fff'];
+  const n=rarity==='ultra-rare'?28:16,cx=sz/2,cy=sz/2,R=sz*.33;
+  for(let i=0;i<n;i++){const a=(i/n)*Math.PI*2,r=R+(i%4)*sz*.055,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;ctx.fillStyle=pal[i%pal.length];ctx.fillRect(x,y,5,5);ctx.fillRect(x+3,y-3,2,2);ctx.fillRect(x-3,y+3,2,2);}
+}
+
+/* ════════════════════════
+   PARTICLES & RINGS
+════════════════════════ */
+function spawnParticles(rarity){
+  const cnt=document.getElementById('particles');
+  const n={'ultra-rare':50,legendary:35,epic:22,rare:15,common:10}[rarity]||10;
+  const pal={'ultra-rare':['#d4a017','#f5c842','#ffe066','#fff','#ffa040'],legendary:['#c8102e','#ffd700','#fff','#ffaaaa'],epic:['#c8102e','#f5c842','#ff6eb4'],rare:['#9333ea','#60a5fa','#fff'],common:['#c8102e','#ffaaaa','#fff']}[rarity]||['#c8102e','#fff'];
+  for(let i=0;i<n;i++){const el=document.createElement('div');const sz=rarity==='ultra-rare'?(4+~~(Math.random()*4)*4):(4+~~(Math.random()*2)*4);el.className='particle';el.style.cssText=`left:${3+Math.random()*94}%;top:${-5+Math.random()*25}%;background:${pal[~~(Math.random()*pal.length)]};width:${sz}px;height:${sz}px;animation-duration:${1.4+Math.random()*1.2}s;animation-delay:${Math.random()*.7}s;border-radius:${Math.random()>.5?'50%':'2px'};`;cnt.appendChild(el);setTimeout(()=>el.remove(),3500);}
+}
+function spawnRings(rarity){const isGold=rarity==='ultra-rare'||rarity==='legendary';[0,120,240].forEach(delay=>{setTimeout(()=>{const ring=document.createElement('div');ring.className='ring-burst'+(isGold?' gold':'');const sz=40+delay/4;ring.style.cssText=`width:${sz}px;height:${sz}px;border-width:${delay===0?4:3}px;`;document.body.appendChild(ring);setTimeout(()=>ring.remove(),800);},delay);});}
+
+/* ════════════════════════
+   FLASH
+════════════════════════ */
+function doFlash(){const f=document.getElementById('flash');f.classList.add('pop');setTimeout(()=>{f.style.transition='opacity .5s';f.style.opacity='0';},50);setTimeout(()=>{f.style.transition='';f.classList.remove('pop');f.style.opacity='';},600);}
+
+/* ════════════════════════
+   REVEAL MODAL
+════════════════════════ */
+function populateRevealCard(m){
+  const cv=document.getElementById('cCanvas');cv.getContext('2d').clearRect(0,0,32,32);DRAW[m.key](cv.getContext('2d'));
+  drawSparkles(document.getElementById('sparkCanvas'),m.rarity,180);
+  const aw=document.getElementById('artWrap');aw.querySelector('.ultra-glow')?.remove();
+  if(m.rarity==='ultra-rare'){const g=document.createElement('div');g.className='ultra-glow';aw.appendChild(g);}
+  const cr=document.getElementById('cRarity');cr.className='card-rarity '+m.rarity;cr.textContent=m.lbl;
+  document.getElementById('cName').textContent=m.name;
+  document.getElementById('cMsg').textContent=m.msg;
+  document.getElementById('cFrom').innerHTML=m.from;
+  document.getElementById('cNum').textContent=m.num;
+  document.getElementById('mainCard').className='card '+m.rarity;
+}
+function openRevealModal(){document.getElementById('revealBackdrop').classList.add('open');const rm=document.getElementById('revealModal');rm.style.animation='none';void rm.offsetWidth;rm.style.animation='';}
+function closeReveal(){document.getElementById('revealBackdrop').classList.remove('open');}
+function closeModal(e){if(e.target===document.getElementById('revealBackdrop'))closeReveal();}
+
+/* ════════════════════════
+   OPEN BOX
+════════════════════════ */
+function openBox(){
+  const un=NORM_IDS.filter(id=>!collected.includes(id));
+  const uu=ULTRA_IDS.filter(id=>!collected.includes(id));
+  if(!un.length&&!uu.length)return;
+  let pickedId;
+  if(!un.length)pickedId=uu[~~(Math.random()*uu.length)];
+  else if(uu.length&&Math.random()<.22)pickedId=uu[~~(Math.random()*uu.length)];
+  else pickedId=un[~~(Math.random()*un.length)];
+  const m=M[pickedId];
+  collected.push(pickedId);lastId=pickedId;save();
+  populateRevealCard(m);
+  doFlash();
+  setTimeout(()=>{openRevealModal();spawnRings(m.rarity);spawnParticles(m.rarity);playRevealSound(m.rarity);},80);
+  buildGrids();
+  if(collected.length>=12){
+    const ob=document.getElementById('openBtn');
+    ob.disabled=true;ob.textContent='✓ Colectie Completa!';
+    document.getElementById('collectionBtn').classList.add('complete');
+    document.getElementById('collectionBtn').textContent='✦ Vezi Colectia Ta ✦';
+  }
+}
+
+/* ════════════════════════
+   MINI GRID — removed from main screen, kept for internal use only
+════════════════════════ */
+function buildGrids(){
+  document.getElementById('cnt').textContent=collected.length;
+  document.getElementById('allOk').style.display=collected.length>=12?'block':'none';
+}
+
+/* ════════════════════════════════════════
+   CAROUSEL (Balatro-style)
+════════════════════════════════════════ */
+let carouselCards=[];   // DOM elements
+let fanAnimId=null;
+let isShuffling=false;
+
+/* Build a fly-card DOM element */
+function makeFlyCard(m,idx,total){
+  const div=document.createElement('div');
+  const isColl=collected.includes(m.id);
+  const cls='fly-card '+m.rarity+(isColl?'':' mystery');
+  div.className=cls;
+  div.dataset.id=m.id;
+
+  const cv=document.createElement('canvas');cv.width=32;cv.height=32;
+  DRAW[m.key](cv.getContext('2d'));
+  div.appendChild(cv);
+
+  if(!isColl){
+    const qs=document.createElement('div');qs.className='fc-qs';qs.textContent='?';div.appendChild(qs);
+  }
+  const nm=document.createElement('div');nm.className='fc-name';
+  nm.textContent=isColl?m.name:'???';
+  div.appendChild(nm);
+
+  /* click handler */
+  div.addEventListener('click',()=>{
+    if(isShuffling)return;
+    if(isColl){
+      openSpotlight(m);
+    } else {
+      openSpotlight(m,true);/* mystery peek */
+    }
+    playCardFlip();
+  });
+  return div;
+}
+
+/* Place cards in Balatro fan */
+function fanCards(cards,animated=false){
+  const stage=document.getElementById('shuffleStage');
+  const total=cards.length;
+  const spread=Math.min(22,260/total); // degrees spread
+  const startAngle=-(spread*(total-1))/2;
+  const R=320; // arc radius
+  cards.forEach((el,i)=>{
+    const angle=startAngle+i*spread;
+    const rad=angle*(Math.PI/180);
+    const x=Math.sin(rad)*R;
+    const y=R-Math.cos(rad)*R;
+    const zBase=i*2;
+    if(animated){
+      el.style.transition=`transform .5s cubic-bezier(.34,1.2,.64,1) ${i*.04}s, box-shadow .3s`;
+    } else {
+      el.style.transition='none';
+    }
+    el.style.transform=`translateX(${x}px) translateY(${-y+60}px) rotate(${angle}deg)`;
+    el.style.zIndex=zBase;
+    el.style.position='absolute';
+  });
+}
+
+/* Balatro shuffle: cards fly off, reorder, come back */
+function shuffleAnimation(cards,cb){
+  isShuffling=true;
+  const stage=document.getElementById('shuffleStage');
+  const total=cards.length;
+
+  /* Phase 1: cards explode outward randomly */
+  cards.forEach((el,i)=>{
+    const angle=Math.random()*360;
+    const dist=200+Math.random()*200;
+    const rad=angle*(Math.PI/180);
+    const tx=Math.cos(rad)*dist;
+    const ty=Math.sin(rad)*dist;
+    const rot=(Math.random()-0.5)*720;
+    el.style.transition=`transform ${.3+Math.random()*.2}s cubic-bezier(.4,0,1,1) ${i*.03}s, opacity .3s`;
+    el.style.transform=`translate(${tx}px,${ty}px) rotate(${rot}deg) scale(.6)`;
+    el.style.opacity='0';
+    el.style.zIndex=i;
+  });
+
+  /* Phase 2: shuffle array, fly back in fan */
+  setTimeout(()=>{
+    /* Fisher-Yates shuffle */
+    for(let i=cards.length-1;i>0;i--){
+      const j=~~(Math.random()*(i+1));
+      [cards[i],cards[j]]=[cards[j],cards[i]];
+      stage.appendChild(cards[i]);
+    }
+    /* make visible again then fan */
+    cards.forEach(el=>{el.style.opacity='1';});
+    setTimeout(()=>{
+      fanCards(cards,true);
+      setTimeout(()=>{isShuffling=false;if(cb)cb();},600);
+    },80);
+  },600);
+}
+
+/* Open carousel screen */
+function openCarousel(){
+  const screen=document.getElementById('carouselScreen');
+  const stage=document.getElementById('shuffleStage');
+  stage.innerHTML='';
+  carouselCards=[];
+
+  /* Build all 12 cards (norm first, then ultra) */
+  const allIds=[...NORM_IDS,...ULTRA_IDS];
+  allIds.forEach((id,idx)=>{
+    const el=makeFlyCard(M[id],idx,allIds.length);
+    stage.appendChild(el);
+    carouselCards.push(el);
+  });
+
+  /* Initial position: stacked in center */
+  carouselCards.forEach((el,i)=>{
+    el.style.transition='none';
+    el.style.transform=`translateX(0px) translateY(0px) rotate(${(Math.random()-0.5)*8}deg) scale(.95)`;
+    el.style.opacity='1';
+    el.style.zIndex=i;
+    el.style.position='absolute';
+  });
+
+  screen.classList.add('open');
+  document.body.style.overflow='hidden';
+
+  /* Build collection display */
+  buildCollDisplay();
+
+  /* Shuffle after brief pause */
+  setTimeout(()=>shuffleAnimation(carouselCards),200);
+}
+
+function closeCarousel(){
+  document.getElementById('carouselScreen').classList.remove('open');
+  document.body.style.overflow='';
+  /* Clean up */
+  if(fanAnimId){cancelAnimationFrame(fanAnimId);fanAnimId=null;}
+}
+
+/* ── Collection display inside carousel ── */
+function buildCollDisplay(){
+  const ng=document.getElementById('collNormGrid');ng.innerHTML='';
+  NORM_IDS.forEach(id=>{
+    const m=M[id];const isColl=collected.includes(id);
+    const card=document.createElement('div');
+    card.className='coll-card'+(isColl?' collected':('' + ' mystery-coll'));
+    const cv=document.createElement('canvas');cv.width=32;cv.height=32;DRAW[m.key](cv.getContext('2d'));
+    const nm=document.createElement('div');nm.className='coll-name';nm.textContent=isColl?m.name:'???';
+    const ml=document.createElement('div');ml.className='coll-mystery-lbl';ml.textContent='★';
+    card.append(cv,nm,ml);
+    card.addEventListener('click',()=>{if(isShuffling)return;openSpotlight(m,!isColl);playCardFlip();});
+    ng.appendChild(card);
+  });
+
+  const ug=document.getElementById('collUltraGrid');ug.innerHTML='';
+  ULTRA_IDS.forEach(id=>{
+    const m=M[id];const isColl=collected.includes(id);
+    const card=document.createElement('div');
+    card.className='coll-card'+(isColl?' ultra-ok':'  mystery-coll');
+    const cv=document.createElement('canvas');cv.width=32;cv.height=32;DRAW[m.key](cv.getContext('2d'));
+    const nm=document.createElement('div');nm.className='coll-name';nm.textContent=isColl?m.name:'???';
+    const ml=document.createElement('div');ml.className='coll-mystery-lbl';ml.textContent='✦';
+    card.append(cv,nm,ml);
+    card.addEventListener('click',()=>{if(isShuffling)return;openSpotlight(m,!isColl);playCardFlip();});
+    ug.appendChild(card);
+  });
+}
+
+/* ════════════════════════
+   SPOTLIGHT (card zoom)
+════════════════════════ */
+function openSpotlight(m,mystery=false){
+  const sp=document.getElementById('cardSpotlight');
+  const cv=document.getElementById('spCanvas');
+  cv.getContext('2d').clearRect(0,0,32,32);DRAW[m.key](cv.getContext('2d'));
+  drawSparkles(document.getElementById('spSparkCanvas'),m.rarity,180);
+
+  const aw=document.getElementById('spArtWrap');aw.querySelector('.ultra-glow')?.remove();
+  if(m.rarity==='ultra-rare'&&!mystery){const g=document.createElement('div');g.className='ultra-glow';aw.appendChild(g);}
+
+  const rarity=mystery?'common':m.rarity;
+  const sr=document.getElementById('spRarity');sr.className='card-rarity '+rarity;
+  sr.textContent=mystery?'• ??? •':m.lbl;
+  document.getElementById('spName').textContent=mystery?'Necunoscut':m.name;
+  document.getElementById('spMsg').textContent=mystery?'Deschide mai multe martisoare pentru a-l descoperi!':m.msg;
+  document.getElementById('spFrom').innerHTML=mystery?'<span class="sig">???</span>':m.from;
+  document.getElementById('spNum').textContent=mystery?'#???':m.num;
+
+  const sc=document.getElementById('spotCard');sc.className='card '+(mystery?'common':m.rarity);
+  /* blur canvas if mystery */
+  cv.style.filter=mystery?'blur(6px) brightness(.4)':'none';
+  cv.style.transform=mystery?'scale(1.1)':'none';
+
+  sp.classList.add('open');
+  const inner=document.getElementById('spotlightInner');
+  inner.style.animation='none';void inner.offsetWidth;inner.style.animation='';
+}
+function closeSpotlight(e){
+  if(e.target===document.getElementById('cardSpotlight')||e.target.closest('#cardSpotlight')===document.getElementById('cardSpotlight')){
+    document.getElementById('cardSpotlight').classList.remove('open');
+  }
+}
+
+/* ════════════════════════
+   RESET
+════════════════════════ */
+function resetAll(){
+  if(!confirm('Resetezi toata colectia?'))return;
+  collected=[];lastId=null;save();
+  const ob=document.getElementById('openBtn');
+  ob.disabled=false;ob.textContent='✦ Deschide Martisorul ✦';
+  const cb=document.getElementById('collectionBtn');
+  cb.classList.remove('complete');cb.textContent='🃏 Vezi Colectia Ta';
+  buildGrids();
+  if(document.getElementById('carouselScreen').classList.contains('open')){
+    closeCarousel();setTimeout(openCarousel,100);
+  }
+}
+
+/* ════════════════════════
+   INIT
+════════════════════════ */
+window.addEventListener('load',()=>{
+  buildGrids();
+  if(collected.length>=12){
+    const ob=document.getElementById('openBtn');
+    ob.disabled=true;ob.textContent='✓ Colectie Completa!';
+    const cb=document.getElementById('collectionBtn');
+    cb.classList.add('complete');cb.textContent='✦ Vezi Colectia Ta ✦';
+  }
+});
+</script>
+</body>
+</html>
