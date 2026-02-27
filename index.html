@@ -441,7 +441,7 @@
       <div class="card-from" id="cFrom">—</div>
       <div class="card-num"  id="cNum">#000</div>
     </div>
-    <button class="close-modal" onclick="closeReveal()">✓ Am primit martisorul</button>
+    <button class="close-modal" onclick="closeReveal()">✓ Am primit mărțișorul</button>
   </div>
 </div>
 
@@ -805,17 +805,17 @@ const M=[
    msg:'Inima de mărțișor îți trimite toată dragostea!',
    from:'Cu toată inima — <span class="sig">Ady, Andy & Bean</span> ❤️',num:'#999'},
   {id:8,key:'bean',    name:'Bean',           rarity:'ultra-rare', lbl:'✦ ULTRA RARE ✦',
-   msg:'Bean a ieșit să îți ureze o primavară cu jucării, plimbări și blăniță caldă!',
-   from:'Ham ham! 🐾 ,num:'#01 / 04'},
+   msg:'Bean a ieșit să îți ureze o primăvară cu jucării, plimbări și blăniță caldă!',
+   from:'Ham ham! 🐾',num:'#01 / 04'},
   {id:9,key:'yarny',   name:'Yarny',          rarity:'ultra-rare', lbl:'✦ ULTRA RARE ✦',
    msg:'Yarny ți-a rezervat un loc pe canapea lângă el – accepți norocul?',
-   from:'Miau! 🐱 ,num:'#02 / 04'},
+   from:'Miau! 🐱',num:'#02 / 04'},
   {id:10,key:'gogo',   name:'Gogo',           rarity:'ultra-rare', lbl:'✦ ULTRA RARE ✦',
    msg:'Gogo s-a trezit special pentru tine – primești noroc dublu, el face somnul în locul tău!',
-   from:'Purr... 🧡 ,num:'#03 / 04'},
+   from:'Purr... 🧡',num:'#03 / 04'},
   {id:11,key:'mitsi',  name:'Mitsi',          rarity:'ultra-rare', lbl:'✦ ULTRA RARE ✦',
    msg:'Mitsi te privește cu eleganță și îți transmite că ești royalty în această primăvară!',
-   from:'*nas ridicat* 🤍 ,num:'#04 / 04'}
+   from:'*nas ridicat* 🤍',num:'#04 / 04'}
 ];
 const NORM_IDS=[0,1,2,3,4,5,6,7];
 const ULTRA_IDS=[8,9,10,11];
@@ -1111,7 +1111,7 @@ function openSpotlight(m,mystery=false){
   const sr=document.getElementById('spRarity');sr.className='card-rarity '+rarity;
   sr.textContent=mystery?'• ??? •':m.lbl;
   document.getElementById('spName').textContent=mystery?'Necunoscut':m.name;
-  document.getElementById('spMsg').textContent=mystery?'Deschide mai multe martisoare pentru a-l descoperi!':m.msg;
+  document.getElementById('spMsg').textContent=mystery?'Deschide mai multe mărțișoare pentru a-l descoperi!':m.msg;
   document.getElementById('spFrom').innerHTML=mystery?'<span class="sig">???</span>':m.from;
   document.getElementById('spNum').textContent=mystery?'#???':m.num;
 
@@ -1134,10 +1134,27 @@ function closeSpotlight(e){
    RESET
 ════════════════════════ */
 function resetAll(){
-  if(!confirm('Resetezi toata colectia?'))return;
+  const resetMsg = `⚠️ ATENȚIE IMPORTANTĂ ⚠️
+
+Ești pe cale să resetezi toată colecția de mărțișoare.
+
+Asta înseamnă că va trebui să o iei de la capăt cu TOATE obligațiile calendaristice care vin la pachet:
+
+🫙 Cele 40 de pahare de vin de pe 9 Martie (Măcinicii) — da, toate 40, nu e negociabil, bătrânii zic că fiecare pahar e pentru un sfânt și nu poți să lași sfinții cu paharul pe jumătate.
+
+🍯 Mucenicii fierți cu miere, nucă și scorțișoară — va trebui să îi mănânci din nou și să te prefaci că nu ai mâncat deja o tavă întreagă.
+
+🌬️ Ziua Babei Dochia — trebuie să alegi din nou o zi de la 1 la 9 Martie care să fie "ziua ta". Dacă a fost frumos, ești cu noroc tot anul. Dacă a plouat... ghinionul e deja la ușă, dar mărțișorul poate ajuta.
+
+🧣 Baba Dochia și-a dat jos toate cele 12 cojoace pe munte și a înghețat — morala: nu te dezbrăca prea devreme primăvara și nu reseta colecțiile de mărțișoare fără motiv.
+
+🌸 Mărțișorul trebuie purtat la rever până înfloresc pomii, apoi agățat în crengile unui pom înflorit pentru noroc.
+
+Ești sigur că vrei să ignori toate acestea și să resetezi?`;
+  if(!confirm(resetMsg))return;
   collected=[];lastId=null;save();
   const ob=document.getElementById('openBtn');
-  ob.disabled=false;ob.textContent='✦ Deschide Martisorul ✦';
+  ob.disabled=false;ob.textContent='✦ Deschide Mărțișorul ✦';
   const cb=document.getElementById('collectionBtn');
   cb.classList.remove('complete');cb.textContent='🃏 Vezi Colectia Ta';
   buildGrids();
