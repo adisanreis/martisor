@@ -15,5 +15,5 @@ HTML · CSS · JavaScript · Canvas API · Claude
 [Live site →](https://adisanreis.github.io/martisor/)
 
 ## Notes
-Personal project. Characters include Bean (Australian Kelpie) and Yarny (ginger cat) 
+Personal project. Characters include Bean (Australian Kelpie), Yarny (ginger cat), Gogo & Mitsi
 as Ultra Rare cards — because some things are genuinely one of a kind.
